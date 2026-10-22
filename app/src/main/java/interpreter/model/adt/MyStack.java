@@ -25,7 +25,6 @@ public class MyStack<T> implements IStack<T> {
         return stack.isEmpty();
     }
 
-    /** Top of the stack first, e.g. {s1 | s2 | s3}. */
     @Override
     public String toString() {
         return stack.stream().map(Object::toString).collect(Collectors.joining(" | ", "{", "}"));
