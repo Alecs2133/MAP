@@ -12,8 +12,7 @@ public class PrgState {
     private IList<IValue> out;
     private final IStmt originalProgram;
 
-    public PrgState(IStack<IStmt> exeStack, IDictionary<String, IValue> symTable,
-                    IList<IValue> out, IStmt program) {
+    public PrgState(IStack<IStmt> exeStack, IDictionary<String, IValue> symTable, IList<IValue> out, IStmt program) {
         this.exeStack = exeStack;
         this.symTable = symTable;
         this.out = out;
@@ -51,6 +50,6 @@ public class PrgState {
 
     @Override
     public String toString() {
-        return "ExeStack: " + exeStack + "\n" + "SymTable: " + symTable + "\n" + "Out:      " + out + "\n";
+        return "ExeStack: " + exeStack + "\n" + "SymTable: " + symTable + "\n" + "Out: " + out + "\n";
     }
 }

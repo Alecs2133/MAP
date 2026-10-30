@@ -33,8 +33,6 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
 
     @Override
     public String toString() {
-        return map.entrySet().stream()
-                .map(e -> e.getKey() + " -> " + e.getValue())
-                .collect(Collectors.joining(", ", "{", "}"));
+        return map.entrySet().stream().map(e -> e.getKey() + " -> " + e.getValue()).collect(Collectors.joining(", ", "{", "}"));
     }
 }
