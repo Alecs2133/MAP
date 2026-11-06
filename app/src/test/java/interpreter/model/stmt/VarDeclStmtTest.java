@@ -14,6 +14,8 @@ import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import interpreter.model.type.StringType;
+import interpreter.model.value.StringValue;
 
 class VarDeclStmtTest {
     private PrgState state;
@@ -42,5 +44,11 @@ class VarDeclStmtTest {
         var stmt = new VarDeclStmt("v", new BoolType());
         var ex = assertThrows(StatementException.class, () -> stmt.execute(state));
         assertEquals("variable v is already declared", ex.getMessage());
+    }
+
+    @Test
+    void stringVariableGetsDefaultEmptyString() throws MyException {
+        new VarDeclStmt("s", new StringType()).execute(state);
+        assertEquals(new StringValue(""), state.getSymTable().lookup("s"));
     }
 }

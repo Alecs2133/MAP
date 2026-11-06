@@ -22,7 +22,7 @@ class ControllerTest {
 
     private static PrgState run(IStmt program) throws MyException {
         PrgState state = newState(program);
-        new Controller(new Repository(state), false).allStep();   // display off
+        new Controller(new Repository(state), false).allStep();
         return state;
     }
 
@@ -49,12 +49,18 @@ class ControllerTest {
     }
 
     @Test
+    void example4AssigningIntToBoolThrows() {
+        var ex = assertThrows(StatementException.class, () -> run(Examples.EX4));
+        assertEquals("declared type of variable a and type of the assigned expression do not match", ex.getMessage());
+    }
+
+    @Test
     void oneStepAppliesExactlyOneRule() throws MyException {
         PrgState state = newState(Examples.EX1);
         Controller controller = new Controller(new Repository(state), false);
-        controller.oneStep(state);   // S1 splits the CompStmt
+        controller.oneStep(state);
         assertEquals("{int v | (v = 2; print(v))}", state.getExeStack().toString());
-        controller.oneStep(state);   // S3 declares v
+        controller.oneStep(state);
         assertEquals("{v -> 0}", state.getSymTable().toString());
     }
 

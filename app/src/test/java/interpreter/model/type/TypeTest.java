@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import org.junit.jupiter.api.Test;
+import interpreter.model.value.StringValue;
 
 class TypeTest {
     @Test
@@ -22,5 +23,20 @@ class TypeTest {
         assertEquals(new IntType(), new IntValue(7).getType());
         assertEquals(new BoolType(), new BoolValue(true).getType());
         assertNotEquals(new IntType(), new BoolValue(true).getType());
+    }
+    @Test
+    void stringDefaultIsEmptyString() {
+        assertEquals(new StringValue(""), new StringType().defaultValue());
+    }
+
+    @Test
+    void equalStringValuesHaveTheSameHashCode() {
+        StringValue a = new StringValue("test.in");
+        StringValue b = new StringValue("test.in");
+        assertEquals(a, b);
+        assertEquals(a.hashCode(), b.hashCode());
+        assertNotEquals(a, new StringValue("other.in"));
+        assertEquals(new StringType(), a.getType());
+        assertEquals("\"test.in\"", a.toString());
     }
 }
