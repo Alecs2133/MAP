@@ -15,3 +15,5 @@ out/
 .DS_Store
 # pasi temporari
 _de_adaugat/
+
+log*.txt

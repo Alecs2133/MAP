@@ -5,24 +5,27 @@ import static org.junit.jupiter.api.Assertions.*;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
-import interpreter.model.adt.MyDictionary;
-import interpreter.model.adt.MyList;
-import interpreter.model.adt.MyStack;
 import interpreter.model.stmt.IStmt;
 import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 class ControllerTest {
+    @TempDir
+    Path dir;
 
-    private static PrgState newState(IStmt program) {
-        return PrgState.of(program);
+    private String logPath() {
+        return dir.resolve("log.txt").toString();
     }
 
-    private static PrgState run(IStmt program) throws MyException {
-        PrgState state = newState(program);
-        new Controller(new Repository(state), false).allStep();
+    private PrgState run(IStmt program) throws MyException {
+        PrgState state = PrgState.of(program);
+        new Controller(new Repository(state, logPath()), false).allStep();   // display off
         return state;
     }
 
@@ -55,9 +58,18 @@ class ControllerTest {
     }
 
     @Test
+    void logFileContainsTheFourSectionsInOrder() throws Exception {
+        run(Examples.EX1);
+        String log = Files.readString(dir.resolve("log.txt"));
+        int a = log.indexOf("ExeStack:"), b = log.indexOf("SymTable:"),
+                c = log.indexOf("Out:"),      d = log.indexOf("FileTable:");
+        assertTrue(0 <= a && a < b && b < c && c < d);
+    }
+
+    @Test
     void oneStepAppliesExactlyOneRule() throws MyException {
-        PrgState state = newState(Examples.EX1);
-        Controller controller = new Controller(new Repository(state), false);
+        PrgState state = PrgState.of(Examples.EX1);
+        Controller controller = new Controller(new Repository(state, logPath()), false);
         controller.oneStep(state);
         assertEquals("{int v | (v = 2; print(v))}", state.getExeStack().toString());
         controller.oneStep(state);
@@ -67,7 +79,7 @@ class ControllerTest {
     @Test
     void oneStepOnEmptyStackThrows() throws MyException {
         PrgState state = run(Examples.EX1);
-        Controller controller = new Controller(new Repository(state), false);
+        Controller controller = new Controller(new Repository(state, logPath()), false);
         assertThrows(StatementException.class, () -> controller.oneStep(state));
     }
 }
