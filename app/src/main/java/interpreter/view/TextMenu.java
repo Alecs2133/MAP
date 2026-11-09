@@ -61,7 +61,7 @@ public class TextMenu {
             System.out.println("Select a program first.");
             return;
         }
-        PrgState state = new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), selected);
+        PrgState state = PrgState.of(selected);
         Controller controller = new Controller(new Repository(state), true);
         try {
             controller.allStep();

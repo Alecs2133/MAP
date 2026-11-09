@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class NopStmtTest {
     @Test
     void leavesTheStateUnchanged() throws MyException {
-        PrgState state = new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), new NopStmt());
+        PrgState state = PrgState.of(new NopStmt());
         state.getExeStack().pop();
         String before = state.toString();
         new NopStmt().execute(state);

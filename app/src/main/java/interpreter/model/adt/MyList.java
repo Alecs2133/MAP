@@ -30,4 +30,9 @@ public class MyList<T> implements IList<T> {
     public String toString() {
         return list.stream().map(Object::toString).collect(Collectors.joining(", ", "{", "}"));
     }
+
+    @Override
+    public List<T> toList() {
+        return List.copyOf(list);
+    }
 }

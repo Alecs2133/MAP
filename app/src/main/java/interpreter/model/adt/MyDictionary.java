@@ -2,12 +2,13 @@ package interpreter.model.adt;
 
 import interpreter.exceptions.ADTException;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MyDictionary<K, V> implements IDictionary<K, V> {
-    private final Map<K, V> map = new HashMap<>();
+    private final Map<K, V> map = new LinkedHashMap<>();
 
     @Override
     public boolean isDefined(K key) {
@@ -29,6 +30,17 @@ public class MyDictionary<K, V> implements IDictionary<K, V> {
     public void update(K key, V value) throws ADTException {
         if (!map.containsKey(key)) throw new ADTException("key " + key + " is not defined");
         map.put(key, value);
+    }
+
+    @Override
+    public void remove(K key) throws ADTException {
+        if (!map.containsKey(key)) throw new ADTException("key " + key + " is not defined");
+        map.remove(key);
+    }
+
+    @Override
+    public Map<K, V> toMap() {
+        return Collections.unmodifiableMap(new LinkedHashMap<>(map));
     }
 
     @Override

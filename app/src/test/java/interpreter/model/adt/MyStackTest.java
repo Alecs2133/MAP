@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import interpreter.exceptions.ADTException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 class MyStackTest {
     private IStack<Integer> stack;
@@ -40,5 +41,12 @@ class MyStackTest {
         stack.push(1);
         stack.push(2);
         assertEquals("{2 | 1}", stack.toString());
+    }
+
+    @Test
+    void toListGivesTheTopFirst() {
+        stack.push(1);
+        stack.push(2);
+        assertEquals(List.of(2, 1), stack.toList());
     }
 }

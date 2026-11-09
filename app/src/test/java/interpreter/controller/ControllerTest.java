@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class ControllerTest {
 
     private static PrgState newState(IStmt program) {
-        return new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), program);
+        return PrgState.of(program);
     }
 
     private static PrgState run(IStmt program) throws MyException {
