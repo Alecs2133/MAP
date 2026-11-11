@@ -17,6 +17,9 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.junit.jupiter.api.AfterEach;
+import java.io.BufferedReader;
+
 class FileStmtTest {
     @TempDir
     Path dir;
@@ -34,6 +37,12 @@ class FileStmtTest {
         state = PrgState.of(new NopStmt());
         state.getExeStack().pop();
         new VarDeclStmt("x", new IntType()).execute(state);
+    }
+
+    @AfterEach
+    void closeOpenFiles() throws Exception {
+        for (BufferedReader reader : state.getFileTable().toMap().values())
+            reader.close();
     }
 
     @Test

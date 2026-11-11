@@ -53,7 +53,7 @@ class ControllerTest {
 
     @Test
     void example4AssigningIntToBoolThrows() {
-        var ex = assertThrows(StatementException.class, () -> run(Examples.EX4));
+        var ex = assertThrows(StatementException.class, () -> run(Examples.TYPE_ERROR));
         assertEquals("declared type of variable a and type of the assigned expression do not match", ex.getMessage());
     }
 
@@ -81,5 +81,31 @@ class ControllerTest {
         PrgState state = run(Examples.EX1);
         Controller controller = new Controller(new Repository(state, logPath()), false);
         assertThrows(StatementException.class, () -> controller.oneStep(state));
+    }
+
+    @Test
+    void fileExampleReadsBothNumbersAndClosesTheFile() throws Exception {
+        Path in = dir.resolve("test.in");
+        Files.writeString(in, "15\n50\n");
+        PrgState s = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(15), s.getOut().get(0));
+        assertEquals(new IntValue(50), s.getOut().get(1));
+        assertTrue(s.getFileTable().toMap().isEmpty());
+    }
+
+    @Test
+    void fileExampleWithAnEmptyFilePrintsZeroTwice() throws Exception {
+        Path in = dir.resolve("empty.in");
+        Files.writeString(in, "");
+        PrgState s = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(0), s.getOut().get(0));
+        assertEquals(new IntValue(0), s.getOut().get(1));
+    }
+
+    @Test
+    void example5PrintsFive() throws MyException {
+        PrgState s = run(Examples.EX5);
+        assertEquals(1, s.getOut().size());
+        assertEquals(new IntValue(5), s.getOut().get(0));
     }
 }
