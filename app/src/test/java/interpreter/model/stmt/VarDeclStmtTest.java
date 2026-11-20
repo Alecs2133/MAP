@@ -11,6 +11,8 @@ import interpreter.model.value.IntValue;
 import interpreter.model.value.StringValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import interpreter.model.type.RefType;
+import interpreter.model.value.RefValue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,5 +50,11 @@ class VarDeclStmtTest {
     void stringVariableGetsDefaultEmptyString() throws MyException {
         new VarDeclStmt("s", new StringType()).execute(state);
         assertEquals(new StringValue(""), state.getSymTable().lookup("s"));
+    }
+
+    @Test
+    void refVariableGetsDefaultNullReference() throws MyException {
+        new VarDeclStmt("v", new RefType(new IntType())).execute(state);
+        assertEquals(new RefValue(0, new IntType()), state.getSymTable().lookup("v"));
     }
 }

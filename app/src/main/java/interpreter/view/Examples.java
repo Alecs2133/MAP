@@ -71,9 +71,18 @@ public final class Examples {
                                             new PrintStmt(new VarExp("a")),
                                             new PrintStmt(new VarExp("b")))))));
 
-    // Ex6 (fostul EX4 din A2): bool a; a = 2; print(a);  -> eroare de tip
+    // bool a; a = 2; print(a);
     public static final IStmt TYPE_ERROR = new CompStmt(new VarDeclStmt("a", new BoolType()),
             new CompStmt(new AssignStmt("a", new ValueExp(new IntValue(2))), new PrintStmt(new VarExp("a"))));
 
-    public static final List<IStmt> ALL = List.of(EX1, EX2, EX3, EX4, EX5, TYPE_ERROR);
+    // int a; int b; bool c; a = 1; b = 2; c = (a != b); print(c);
+    public static final IStmt EX_LAB = new CompStmt(new VarDeclStmt("a", new IntType()),
+            new CompStmt(new VarDeclStmt("b", new IntType()),
+                    new CompStmt(new VarDeclStmt("c", new BoolType()),
+                            new CompStmt(new AssignStmt("a", new ValueExp(new IntValue(1))),
+                                    new CompStmt(new AssignStmt("b", new ValueExp(new IntValue(2))),
+                                            new CompStmt(new AssignStmt("c", new RelationalExp(RelOp.NE, new VarExp("a"), new VarExp("b"))),
+                                                    new PrintStmt(new VarExp("c"))))))));
+
+    public static final List<IStmt> ALL = List.of(EX1, EX2, EX3, EX4, EX5, TYPE_ERROR, EX_LAB);
 }

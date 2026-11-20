@@ -6,6 +6,7 @@ import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import org.junit.jupiter.api.Test;
 import interpreter.model.value.StringValue;
+import interpreter.model.value.RefValue;
 
 class TypeTest {
     @Test
@@ -38,5 +39,26 @@ class TypeTest {
         assertNotEquals(a, new StringValue("other.in"));
         assertEquals(new StringType(), a.getType());
         assertEquals("\"test.in\"", a.toString());
+    }
+
+    @Test
+    void refDefaultIsNullAddressWithTheInnerType() {
+        assertEquals(new RefValue(0, new IntType()), new RefType(new IntType()).defaultValue());
+    }
+
+    @Test
+    void nestedRefTypesAreComparedRecursively() {
+        IType refRefInt = new RefType(new RefType(new IntType()));
+        assertEquals(new RefType(new RefType(new IntType())), refRefInt);
+        assertNotEquals(new RefType(new IntType()), refRefInt);
+        assertNotEquals(new RefType(new RefType(new BoolType())), refRefInt);
+        assertEquals("Ref(Ref(int))", refRefInt.toString());
+    }
+
+    @Test
+    void refValueKnowsItsType() {
+        RefValue v = new RefValue(2, new RefType(new IntType()));
+        assertEquals(new RefType(new RefType(new IntType())), v.getType());
+        assertEquals("(2, Ref(int))", v.toString());
     }
 }

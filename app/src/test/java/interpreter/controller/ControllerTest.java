@@ -6,6 +6,7 @@ import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
 import interpreter.model.stmt.IStmt;
+import interpreter.model.value.BoolValue;
 import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
@@ -61,8 +62,7 @@ class ControllerTest {
     void logFileContainsTheFourSectionsInOrder() throws Exception {
         run(Examples.EX1);
         String log = Files.readString(dir.resolve("log.txt"));
-        int a = log.indexOf("ExeStack:"), b = log.indexOf("SymTable:"),
-                c = log.indexOf("Out:"),      d = log.indexOf("FileTable:");
+        int a = log.indexOf("ExeStack:"), b = log.indexOf("SymTable:"), c = log.indexOf("Out:"), d = log.indexOf("FileTable:");
         assertTrue(0 <= a && a < b && b < c && c < d);
     }
 
@@ -107,5 +107,11 @@ class ControllerTest {
         PrgState s = run(Examples.EX5);
         assertEquals(1, s.getOut().size());
         assertEquals(new IntValue(5), s.getOut().get(0));
+    }
+
+    @Test
+    void exampleEX_LABPrintsTrue() throws MyException {
+        PrgState s = run(Examples.EX_LAB);
+        assertEquals(new BoolValue(true), s.getOut().get(0));
     }
 }

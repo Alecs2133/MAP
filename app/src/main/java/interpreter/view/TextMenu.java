@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class TextMenu {
-    private final Map<String, Command> commands = new LinkedHashMap<>();   // in insertion order
+    private final Map<String, Command> commands = new LinkedHashMap<>();
 
     public void addCommand(Command c) {
         commands.put(c.getKey(), c);
@@ -21,7 +21,7 @@ public class TextMenu {
         while (true) {
             printMenu();
             System.out.print("Input the option: ");
-            if (!scanner.hasNextLine()) return;          // input closed (Ctrl+D)
+            if (!scanner.hasNextLine()) return;
             Command c = commands.get(scanner.nextLine().strip());
             if (c == null) {
                 System.out.println("Invalid option");
