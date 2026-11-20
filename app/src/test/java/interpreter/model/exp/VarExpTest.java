@@ -10,8 +10,11 @@ import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import interpreter.model.adt.IHeap;
+import interpreter.model.adt.MyHeap;
 
 class VarExpTest {
+    private final IHeap heap = new MyHeap();
     private IDictionary<String, IValue> symTable;
 
     @BeforeEach
@@ -22,17 +25,17 @@ class VarExpTest {
     @Test
     void returnsTheValueOfADefinedVariable() throws MyException {
         symTable.put("a", new IntValue(2));
-        assertEquals(new IntValue(2), new VarExp("a").eval(symTable));
+        assertEquals(new IntValue(2), new VarExp("a").eval(symTable, heap));
     }
 
     @Test
     void undefinedVariableThrows() {
-        var ex = assertThrows(ExpressionException.class, () -> new VarExp("x").eval(symTable));
+        var ex = assertThrows(ExpressionException.class, () -> new VarExp("x").eval(symTable, heap));
         assertEquals("variable x is not defined", ex.getMessage());
     }
 
     @Test
     void valueExpReturnsItsValue() throws MyException {
-        assertEquals(new IntValue(5), new ValueExp(new IntValue(5)).eval(symTable));
+        assertEquals(new IntValue(5), new ValueExp(new IntValue(5)).eval(symTable, heap));
     }
 }
