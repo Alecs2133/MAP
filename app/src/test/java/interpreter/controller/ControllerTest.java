@@ -12,6 +12,17 @@ import interpreter.repository.Repository;
 import interpreter.view.Examples;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import interpreter.model.type.IntType;
+import interpreter.model.type.RefType;
+import interpreter.model.value.RefValue;
+import interpreter.model.stmt.NewStmt;
+import interpreter.model.exp.ReadHeapExp;
+import interpreter.model.exp.ValueExp;
+import interpreter.model.exp.VarExp;
+import interpreter.model.stmt.CompStmt;
+import interpreter.model.stmt.PrintStmt;
+import interpreter.model.stmt.VarDeclStmt;
+
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -113,5 +124,52 @@ class ControllerTest {
     void exampleEX_LABPrintsTrue() throws MyException {
         PrgState s = run(Examples.EX_LAB);
         assertEquals(new BoolValue(true), s.getOut().get(0));
+    }
+
+    @Test
+    void example6PrintsTheTwoReferences() throws MyException {
+        PrgState s = run(Examples.EX6);
+        assertEquals("{(1, int), (2, Ref(int))}", s.getOut().toString());
+        assertEquals("{1 -> 20, 2 -> (1, int)}", s.getHeap().toString());
+        assertEquals(new RefValue(1, new IntType()), s.getSymTable().lookup("v"));
+        assertEquals(new RefValue(2, new RefType(new IntType())), s.getSymTable().lookup("a"));
+    }
+
+    @Test
+    void example7Prints20And25() throws MyException {
+        PrgState s = run(Examples.EX7);
+        assertEquals("{20, 25}", s.getOut().toString());
+        assertEquals("{1 -> 20, 2 -> (1, int)}", s.getHeap().toString());
+    }
+
+    @Test
+    void example8Prints20And35() throws MyException {
+        PrgState s = run(Examples.EX8);
+        assertEquals("{20, 35}", s.getOut().toString());
+        assertEquals("{1 -> 30}", s.getHeap().toString());
+    }
+
+    @Test
+    void example9Prints20WithTheSafeCollector() throws MyException {
+        PrgState s = run(Examples.EX9);
+        assertEquals("{20}", s.getOut().toString());
+        assertEquals("{1 -> 20, 2 -> (1, int), 3 -> 30}", s.getHeap().toString());
+    }
+
+    @Test
+    void garbageIsRemovedAfterEveryStep() throws MyException {
+        IStmt prg = new CompStmt(new VarDeclStmt("v", new RefType(new IntType())),
+                new CompStmt(new NewStmt("v", new ValueExp(new IntValue(20))),
+                        new CompStmt(new NewStmt("v", new ValueExp(new IntValue(30))),
+                                new PrintStmt(new ReadHeapExp(new VarExp("v"))))));
+        PrgState s = run(prg);
+        assertEquals("{30}", s.getOut().toString());
+        assertEquals("{2 -> 30}", s.getHeap().toString());
+    }
+
+    @Test
+    void example10CountsDownFrom4To0() throws MyException {
+        PrgState s = run(Examples.EX10);
+        assertEquals("{4, 3, 2, 1, 0}", s.getOut().toString());
     }
 }
