@@ -19,8 +19,7 @@ public final class GarbageCollector {
                 .collect(Collectors.toSet());
     }
 
-    public static Map<Integer, IValue> unsafeGarbageCollector(Set<Integer> symTableAddr,
-                                                              Map<Integer, IValue> heap) {
+    public static Map<Integer, IValue> unsafeGarbageCollector(Set<Integer> symTableAddr, Map<Integer, IValue> heap) {
         return heap.entrySet().stream()
                 .filter(e -> symTableAddr.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -42,8 +41,7 @@ public final class GarbageCollector {
         return reachable;
     }
 
-    public static Map<Integer, IValue> safeGarbageCollector(Set<Integer> symTableAddr,
-                                                            Map<Integer, IValue> heap) {
+    public static Map<Integer, IValue> safeGarbageCollector(Set<Integer> symTableAddr, Map<Integer, IValue> heap) {
         Set<Integer> reachable = reachableAddresses(symTableAddr, heap);
         return heap.entrySet().stream()
                 .filter(e -> reachable.contains(e.getKey()))

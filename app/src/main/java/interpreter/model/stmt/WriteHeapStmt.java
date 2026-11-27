@@ -20,8 +20,7 @@ public record WriteHeapStmt(String varName, IExp exp) implements IStmt {
             throw new StatementException("wH: address " + ref.address() + " is not in the heap");
         IValue value = exp.eval(symTable, heap);
         if (!value.getType().equals(ref.locationType()))
-            throw new StatementException("wH: " + exp + " has type " + value.getType()
-                    + ", expected " + ref.locationType());
+            throw new StatementException("wH: " + exp + " has type " + value.getType() + ", expected " + ref.locationType());
         heap.update(ref.address(), value);
         return state;
     }
